@@ -1,113 +1,5 @@
 // SoftEther VPN Source Code - Developer Edition Master Branch
 // Mayaqua Kernel
-// 
-// SoftEther VPN Server, Client and Bridge are free software under GPLv2.
-// 
-// Copyright (c) Daiyuu Nobori.
-// Copyright (c) SoftEther VPN Project, University of Tsukuba, Japan.
-// Copyright (c) SoftEther Corporation.
-// 
-// All Rights Reserved.
-// 
-// http://www.softether.org/
-// 
-// Author: Daiyuu Nobori, Ph.D.
-// Contributors:
-// - nattoheaven (https://github.com/nattoheaven)
-// Comments: Tetsuo Sugiyama, Ph.D.
-// 
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 2 as published by the Free Software Foundation.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License version 2
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-// CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-// TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-// SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
-// THE LICENSE AGREEMENT IS ATTACHED ON THE SOURCE-CODE PACKAGE
-// AS "LICENSE.TXT" FILE. READ THE TEXT FILE IN ADVANCE TO USE THE SOFTWARE.
-// 
-// 
-// THIS SOFTWARE IS DEVELOPED IN JAPAN, AND DISTRIBUTED FROM JAPAN,
-// UNDER JAPANESE LAWS. YOU MUST AGREE IN ADVANCE TO USE, COPY, MODIFY,
-// MERGE, PUBLISH, DISTRIBUTE, SUBLICENSE, AND/OR SELL COPIES OF THIS
-// SOFTWARE, THAT ANY JURIDICAL DISPUTES WHICH ARE CONCERNED TO THIS
-// SOFTWARE OR ITS CONTENTS, AGAINST US (SOFTETHER PROJECT, SOFTETHER
-// CORPORATION, DAIYUU NOBORI OR OTHER SUPPLIERS), OR ANY JURIDICAL
-// DISPUTES AGAINST US WHICH ARE CAUSED BY ANY KIND OF USING, COPYING,
-// MODIFYING, MERGING, PUBLISHING, DISTRIBUTING, SUBLICENSING, AND/OR
-// SELLING COPIES OF THIS SOFTWARE SHALL BE REGARDED AS BE CONSTRUED AND
-// CONTROLLED BY JAPANESE LAWS, AND YOU MUST FURTHER CONSENT TO
-// EXCLUSIVE JURISDICTION AND VENUE IN THE COURTS SITTING IN TOKYO,
-// JAPAN. YOU MUST WAIVE ALL DEFENSES OF LACK OF PERSONAL JURISDICTION
-// AND FORUM NON CONVENIENS. PROCESS MAY BE SERVED ON EITHER PARTY IN
-// THE MANNER AUTHORIZED BY APPLICABLE LAW OR COURT RULE.
-// 
-// USE ONLY IN JAPAN. DO NOT USE THIS SOFTWARE IN ANOTHER COUNTRY UNLESS
-// YOU HAVE A CONFIRMATION THAT THIS SOFTWARE DOES NOT VIOLATE ANY
-// CRIMINAL LAWS OR CIVIL RIGHTS IN THAT PARTICULAR COUNTRY. USING THIS
-// SOFTWARE IN OTHER COUNTRIES IS COMPLETELY AT YOUR OWN RISK. THE
-// SOFTETHER VPN PROJECT HAS DEVELOPED AND DISTRIBUTED THIS SOFTWARE TO
-// COMPLY ONLY WITH THE JAPANESE LAWS AND EXISTING CIVIL RIGHTS INCLUDING
-// PATENTS WHICH ARE SUBJECTS APPLY IN JAPAN. OTHER COUNTRIES' LAWS OR
-// CIVIL RIGHTS ARE NONE OF OUR CONCERNS NOR RESPONSIBILITIES. WE HAVE
-// NEVER INVESTIGATED ANY CRIMINAL REGULATIONS, CIVIL LAWS OR
-// INTELLECTUAL PROPERTY RIGHTS INCLUDING PATENTS IN ANY OF OTHER 200+
-// COUNTRIES AND TERRITORIES. BY NATURE, THERE ARE 200+ REGIONS IN THE
-// WORLD, WITH DIFFERENT LAWS. IT IS IMPOSSIBLE TO VERIFY EVERY
-// COUNTRIES' LAWS, REGULATIONS AND CIVIL RIGHTS TO MAKE THE SOFTWARE
-// COMPLY WITH ALL COUNTRIES' LAWS BY THE PROJECT. EVEN IF YOU WILL BE
-// SUED BY A PRIVATE ENTITY OR BE DAMAGED BY A PUBLIC SERVANT IN YOUR
-// COUNTRY, THE DEVELOPERS OF THIS SOFTWARE WILL NEVER BE LIABLE TO
-// RECOVER OR COMPENSATE SUCH DAMAGES, CRIMINAL OR CIVIL
-// RESPONSIBILITIES. NOTE THAT THIS LINE IS NOT LICENSE RESTRICTION BUT
-// JUST A STATEMENT FOR WARNING AND DISCLAIMER.
-// 
-// 
-// SOURCE CODE CONTRIBUTION
-// ------------------------
-// 
-// Your contribution to SoftEther VPN Project is much appreciated.
-// Please send patches to us through GitHub.
-// Read the SoftEther VPN Patch Acceptance Policy in advance:
-// http://www.softether.org/5-download/src/9.patch
-// 
-// 
-// DEAR SECURITY EXPERTS
-// ---------------------
-// 
-// If you find a bug or a security vulnerability please kindly inform us
-// about the problem immediately so that we can fix the security problem
-// to protect a lot of users around the world as soon as possible.
-// 
-// Our e-mail address for security reports is:
-// softether-vpn-security [at] softether.org
-// 
-// Please note that the above e-mail address is not a technical support
-// inquiry address. If you need technical assistance, please visit
-// http://www.softether.org/ and ask your question on the users forum.
-// 
-// Thank you for your cooperation.
-// 
-// 
-// NO MEMORY OR RESOURCE LEAKS
-// ---------------------------
-// 
-// The memory-leaks and resource-leaks verification under the stress
-// test has been passed before release this source code.
 
 
 // Network.c
@@ -205,7 +97,6 @@ static LOCK *socket_library_lock = NULL;
 extern LOCK *openssl_lock;
 static LOCK *ssl_accept_lock = NULL;
 static LOCK *ssl_connect_lock = NULL;
-static TOKEN_LIST *cipher_list_token = NULL;
 static COUNTER *num_tcp_connections = NULL;
 static LOCK *dns_lock = NULL;
 static LOCK *unix_dns_server_addr_lock = NULL;
@@ -232,12 +123,6 @@ static bool disable_gethostname_by_accept = false;
 static COUNTER *getip_thread_counter = NULL;
 static UINT max_getip_thread = 0;
 
-
-static char *cipher_list = "RC4-MD5 RC4-SHA AES128-SHA AES256-SHA DES-CBC-SHA DES-CBC3-SHA DHE-RSA-AES128-SHA DHE-RSA-AES256-SHA AES128-GCM-SHA256 AES128-SHA256 AES256-GCM-SHA384 AES256-SHA256 DHE-RSA-AES128-GCM-SHA256 DHE-RSA-AES128-SHA256 DHE-RSA-AES256-GCM-SHA384 DHE-RSA-AES256-SHA256 ECDHE-RSA-AES128-GCM-SHA256 ECDHE-RSA-AES128-SHA256 ECDHE-RSA-AES256-GCM-SHA384 ECDHE-RSA-AES256-SHA384"
-#if OPENSSL_VERSION_NUMBER >= 0x10100000L
-	" DHE-RSA-CHACHA20-POLY1305 ECDHE-RSA-CHACHA20-POLY1305";
-#endif
-;
 
 static LIST *ip_clients = NULL;
 
@@ -559,7 +444,7 @@ UINT GetCurrentDDnsFqdnHash()
 	Trim(name);
 	StrUpper(name);
 
-	HashSha1(hash, name, StrLen(name));
+	Sha1(hash, name, StrLen(name));
 
 	Copy(&ret, hash, sizeof(UINT));
 
@@ -2555,7 +2440,7 @@ void RUDPBulkSend(RUDP_STACK *r, RUDP_SESSION *se, void *data, UINT data_size)
 	Copy(iv, se->BulkNextIv, SHA1_SIZE);
 	Copy(crypt_key_src + 0, se->BulkSendKey->Data, SHA1_SIZE);
 	Copy(crypt_key_src + SHA1_SIZE, iv, SHA1_SIZE);
-	HashSha1(crypt_key, crypt_key_src, SHA1_SIZE * 2);
+	Sha1(crypt_key, crypt_key_src, SHA1_SIZE * 2);
 	c = NewCrypt(crypt_key, sizeof(crypt_key));
 	Encrypt(c, buf + SHA1_SIZE + SHA1_SIZE, buf + SHA1_SIZE + SHA1_SIZE, sizeof(UINT64) + data_size + padding_size);
 	FreeCrypt(c);
@@ -2567,7 +2452,7 @@ void RUDPBulkSend(RUDP_STACK *r, RUDP_SESSION *se, void *data, UINT data_size)
 	if (se->UseHMac == false)
 	{
 		Copy(buf + 0, se->BulkSendKey->Data, SHA1_SIZE);
-		HashSha1(sign, buf, SHA1_SIZE + SHA1_SIZE + sizeof(UINT64) + data_size + padding_size);
+		Sha1(sign, buf, SHA1_SIZE + SHA1_SIZE + sizeof(UINT64) + data_size + padding_size);
 		Copy(buf + 0, sign, SHA1_SIZE);
 	}
 	else
@@ -2690,7 +2575,7 @@ bool RUDPCheckSignOfRecvPacket(RUDP_STACK *r, RUDP_SESSION *se, void *recv_data,
 	// Verification the signature (segment packet)
 	Copy(sign, p, SHA1_SIZE);
 	Copy(p, se->Key_Recv, SHA1_SIZE);
-	HashSha1(sign2, p, recv_size);
+	Sha1(sign2, p, recv_size);
 
 	if (r->Protocol == RUDP_PROTOCOL_DNS || r->Protocol == RUDP_PROTOCOL_ICMP)
 	{
@@ -2713,7 +2598,7 @@ bool RUDPCheckSignOfRecvPacket(RUDP_STACK *r, RUDP_SESSION *se, void *recv_data,
 	{
 		Copy(sign, p, SHA1_SIZE);
 		Copy(p, se->BulkRecvKey->Data, SHA1_SIZE);
-		HashSha1(sign2, p, recv_size);
+		Sha1(sign2, p, recv_size);
 		Copy(p, sign, SHA1_SIZE);
 
 		if (Cmp(sign, sign2, SHA1_SIZE) == 0)
@@ -2765,7 +2650,7 @@ bool RUDPProcessBulkRecvPacket(RUDP_STACK *r, RUDP_SESSION *se, void *recv_data,
 	{
 		Copy(sign, p, SHA1_SIZE);
 		Copy(p, se->BulkRecvKey->Data, SHA1_SIZE);
-		HashSha1(sign2, p, recv_size);
+		Sha1(sign2, p, recv_size);
 		Copy(p, sign, SHA1_SIZE);
 
 		if (Cmp(sign, sign2, SHA1_SIZE) != 0)
@@ -2814,7 +2699,7 @@ bool RUDPProcessBulkRecvPacket(RUDP_STACK *r, RUDP_SESSION *se, void *recv_data,
 	}
 	Copy(keygen + 0, se->BulkRecvKey->Data, SHA1_SIZE);
 	Copy(keygen + SHA1_SIZE, iv, SHA1_SIZE);
-	HashSha1(key, keygen, sizeof(keygen));
+	Sha1(key, keygen, sizeof(keygen));
 
 	c = NewCrypt(key, sizeof(key));
 	Encrypt(c, p, p, size);
@@ -2910,7 +2795,7 @@ bool RUDPProcessRecvPacket(RUDP_STACK *r, RUDP_SESSION *se, void *recv_data, UIN
 	// Validate the signature
 	Copy(sign, p, SHA1_SIZE);
 	Copy(p, se->Key_Recv, SHA1_SIZE);
-	HashSha1(sign2, p, recv_size);
+	Sha1(sign2, p, recv_size);
 	Copy(p, sign, SHA1_SIZE);
 
 	if (r->Protocol == RUDP_PROTOCOL_DNS || r->Protocol == RUDP_PROTOCOL_ICMP)
@@ -2942,7 +2827,7 @@ bool RUDPProcessRecvPacket(RUDP_STACK *r, RUDP_SESSION *se, void *recv_data, UIN
 	}
 	Copy(keygen + 0, iv, SHA1_SIZE);
 	Copy(keygen + SHA1_SIZE, se->Key_Recv, SHA1_SIZE);
-	HashSha1(key, keygen, sizeof(keygen));
+	Sha1(key, keygen, sizeof(keygen));
 
 	c = NewCrypt(key, sizeof(key));
 	Encrypt(c, p, p, size);
@@ -3505,13 +3390,13 @@ void RUDPSendSegmentNow(RUDP_STACK *r, RUDP_SESSION *se, UINT64 seq_no, void *da
 	// Encrypt
 	Copy(keygen + 0, iv, SHA1_SIZE);
 	Copy(keygen + SHA1_SIZE, se->Key_Send, SHA1_SIZE);
-	HashSha1(key, keygen, sizeof(keygen));
+	Sha1(key, keygen, sizeof(keygen));
 	c = NewCrypt(key, sizeof(key));
 	Encrypt(c, dst + SHA1_SIZE * 2, dst + SHA1_SIZE * 2, current_size - (SHA1_SIZE * 2));
 	FreeCrypt(c);
 
 	// Sign
-	HashSha1(sign, dst, current_size);
+	Sha1(sign, dst, current_size);
 	if (r->Protocol == RUDP_PROTOCOL_DNS || r->Protocol == RUDP_PROTOCOL_ICMP)
 	{
 		XorData(sign, sign, r->SvcNameHash, SHA1_SIZE);
@@ -3671,26 +3556,26 @@ RUDP_SESSION *RUDPNewSession(bool server_mode, IP *my_ip, UINT my_port, IP *your
 	b = NewBuf();
 	WriteBuf(b, init_key, SHA1_SIZE);
 	WriteBufStr(b, "zurukko");
-	HashSha1(key1, b->Buf, b->Size);
+	Sha1(key1, b->Buf, b->Size);
 	FreeBuf(b);
 
 	b = NewBuf();
 	WriteBuf(b, init_key, SHA1_SIZE);
 	WriteBuf(b, key1, SHA1_SIZE);
 	WriteBufStr(b, "yasushineko");
-	HashSha1(key2, b->Buf, b->Size);
+	Sha1(key2, b->Buf, b->Size);
 	FreeBuf(b);
 
 	// Generate the magic number for the KeepAlive
 	b = NewBuf();
 	WriteBuf(b, init_key, SHA1_SIZE);
 	WriteBufStr(b, "Magic_KeepAliveRequest");
-	HashSha1(se->Magic_KeepAliveRequest, b->Buf, b->Size);
+	Sha1(se->Magic_KeepAliveRequest, b->Buf, b->Size);
 	FreeBuf(b);
 	b = NewBuf();
 	WriteBuf(b, init_key, SHA1_SIZE);
 	WriteBufStr(b, "Magic_KeepAliveResponse");
-	HashSha1(se->Magic_KeepAliveResponse, b->Buf, b->Size);
+	Sha1(se->Magic_KeepAliveResponse, b->Buf, b->Size);
 	FreeBuf(b);
 
 	if (server_mode == false)
@@ -3852,7 +3737,7 @@ void RUDPMainThread(THREAD *thread, void *param)
 							{
 								UCHAR hash[SHA1_SIZE];
 
-								HashSha1(hash, ((UCHAR *)p->Data) + ip_header_size + sizeof(ICMP_HEADER) + sizeof(ICMP_ECHO) + SHA1_SIZE,
+								Sha1(hash, ((UCHAR *)p->Data) + ip_header_size + sizeof(ICMP_HEADER) + sizeof(ICMP_ECHO) + SHA1_SIZE,
 									p->Size - (ip_header_size + sizeof(ICMP_HEADER) + sizeof(ICMP_ECHO) + SHA1_SIZE));
 
 								if (Cmp(hash, ((UCHAR *)p->Data) + ip_header_size + sizeof(ICMP_HEADER) + sizeof(ICMP_ECHO), SHA1_SIZE) == 0)
@@ -3990,7 +3875,7 @@ void RUDPMainThread(THREAD *thread, void *param)
 				Copy(icmp_data, p->Data, p->Size);
 
 				// Hash
-				HashSha1(hash, icmp_data, p->Size);
+				Sha1(hash, icmp_data, p->Size);
 
 				// Checksum calculation
 				icmp_header->Checksum = IpChecksum(dst_data, dst_size);
@@ -4166,7 +4051,7 @@ void RUDPGetRegisterHostNameByIP(char *dst, UINT size, IP *ip)
 	{
 		UCHAR hash[SHA1_SIZE];
 
-		HashSha1(hash, ip->addr, 4);
+		Sha1(hash, ip->addr, 4);
 		BinToStr(tmp, sizeof(tmp), hash, 2);
 	}
 	else
@@ -4661,7 +4546,7 @@ UINT GetHostIPAddressHash32()
 
 	WriteBuf(b, rand_port_numbers, sizeof(rand_port_numbers));
 
-	HashSha1(hash, b->Buf, b->Size);
+	Sha1(hash, b->Buf, b->Size);
 
 	FreeBuf(b);
 
@@ -5291,7 +5176,7 @@ RUDP_STACK *NewRUDP(bool server_mode, char *svc_name, RUDP_STACK_INTERRUPTS_PROC
 	Trim(tmp);
 	StrLower(tmp);
 
-	HashSha1(r->SvcNameHash, tmp, StrLen(tmp));
+	Sha1(r->SvcNameHash, tmp, StrLen(tmp));
 
 	r->Client_IcmpId = (USHORT)(Rand32() % 65534 + 1);
 	r->Client_IcmpSeqNo = (USHORT)(Rand32() % 65534 + 1);
@@ -5310,7 +5195,7 @@ RUDP_STACK *NewRUDP(bool server_mode, char *svc_name, RUDP_STACK_INTERRUPTS_PROC
 #endif	// OS_WIN32
 
 		pid = Endian32(pid);
-		HashSha1(pid_hash, &pid, sizeof(UINT));
+		Sha1(pid_hash, &pid, sizeof(UINT));
 
 		pid_us = READ_USHORT(pid_hash);
 		if (pid_us == 0 || pid_us == 0xFFFF)
@@ -5564,7 +5449,7 @@ void GetCurrentMachineIpProcessHashInternal(void *hash)
 	}
 	FreeHostIPAddressList(ip_list);
 
-	HashSha1(hash, b->Buf, b->Size);
+	Sha1(hash, b->Buf, b->Size);
 
 	FreeBuf(b);
 
@@ -10677,7 +10562,7 @@ ROUTE_TABLE *GetRouteTable()
 		WriteBuf(buf, e, sizeof(ROUTE_ENTRY));
 	}
 
-	Hash(hash, buf->Buf, buf->Size, false);
+	Md5(hash, buf->Buf, buf->Size);
 
 	FreeBuf(buf);
 
@@ -10707,36 +10592,40 @@ void FreeRouteTable(ROUTE_TABLE *t)
 // UDP receiving
 UINT RecvFrom(SOCK *sock, IP *src_addr, UINT *src_port, void *data, UINT size)
 {
-	SOCKET s;
-	int ret, sz;
 	struct sockaddr_in addr;
+	int ret = 0;
+#ifdef	OS_WIN32
+	int socklen = sizeof(addr);
+#else
+	socklen_t socklen = sizeof(addr);
+#endif
+
 	// Validate arguments
 	if (sock != NULL)
 	{
+		if (sock->IPv6)
+		{
+			return RecvFrom6(sock, src_addr, src_port, data, size);
+		}
+
 		sock->IgnoreRecvErr = false;
 	}
-	if (sock == NULL || src_addr == NULL || src_port == NULL || data == NULL)
+	else
 	{
-		return false;
+		return 0;
 	}
+
+	if (src_addr == NULL || src_port == NULL || data == NULL || size == 0)
+	{
+		return 0;
+	}
+
 	if (sock->Type != SOCK_UDP || sock->socket == INVALID_SOCKET)
 	{
-		return false;
-	}
-	if (size == 0)
-	{
-		return false;
+		return 0;
 	}
 
-	if (sock->IPv6)
-	{
-		return RecvFrom6(sock, src_addr, src_port, data, size);
-	}
-
-	s = sock->socket;
-
-	sz = sizeof(addr);
-	ret = recvfrom(s, data, size, 0, (struct sockaddr *)&addr, (int *)&sz);
+	ret = recvfrom(sock->socket, data, size, 0, (struct sockaddr *)&addr, &socklen);
 	if (ret > 0)
 	{
 		InAddrToIP(src_addr, &addr.sin_addr);
@@ -10744,13 +10633,6 @@ UINT RecvFrom(SOCK *sock, IP *src_addr, UINT *src_port, void *data, UINT size)
 		if (sock->IsRawSocket)
 		{
 			*src_port = sock->LocalPort;
-/*
-			{
-				char tmp[MAX_SIZE];
-
-				IPToStr(tmp, sizeof(tmp), &sock->LocalIP);
-				Debug("Raw: %u from %s\n", sock->LocalPort, tmp);
-			}*/
 		}
 
 		Lock(sock->lock);
@@ -10760,14 +10642,10 @@ UINT RecvFrom(SOCK *sock, IP *src_addr, UINT *src_port, void *data, UINT size)
 		}
 		Unlock(sock->lock);
 
-		// Debug("UDP RecvFrom: %u\n", ret);
-
 		return (UINT)ret;
 	}
 	else
 	{
-		sock->IgnoreRecvErr = false;
-
 #ifdef	OS_WIN32
 		if (WSAGetLastError() == WSAECONNRESET || WSAGetLastError() == WSAENETRESET || WSAGetLastError() == WSAEMSGSIZE || WSAGetLastError() == WSAENETUNREACH ||
 			WSAGetLastError() == WSAENOBUFS || WSAGetLastError() == WSAEHOSTUNREACH || WSAGetLastError() == WSAEUSERS || WSAGetLastError() == WSAEADDRNOTAVAIL || WSAGetLastError() == WSAEADDRNOTAVAIL)
@@ -10780,10 +10658,9 @@ UINT RecvFrom(SOCK *sock, IP *src_addr, UINT *src_port, void *data, UINT size)
 		}
 		else
 		{
-			UINT e = WSAGetLastError();
-//			Debug("RecvFrom Error: %u\n", e);
+			Debug("RecvFrom(): recvfrom() failed with error: %u\n", WSAGetLastError());
 		}
-#else	// OS_WIN32
+#else
 		if (errno == ECONNREFUSED || errno == ECONNRESET || errno == EMSGSIZE || errno == ENOBUFS || errno == ENOMEM || errno == EINTR)
 		{
 			sock->IgnoreRecvErr = true;
@@ -10792,37 +10669,46 @@ UINT RecvFrom(SOCK *sock, IP *src_addr, UINT *src_port, void *data, UINT size)
 		{
 			return SOCK_LATER;
 		}
-#endif	// OS_WIN32
+		else
+		{
+			Debug("RecvFrom(): recvfrom() failed with error: %s\n", strerror(errno));
+		}
+#endif
 		return 0;
 	}
 }
 UINT RecvFrom6(SOCK *sock, IP *src_addr, UINT *src_port, void *data, UINT size)
 {
-	SOCKET s;
-	int ret, sz;
 	struct sockaddr_in6 addr;
+	int ret = 0;
+#ifdef	OS_WIN32
+	int socklen = sizeof(addr);
+#else
+	socklen_t socklen = sizeof(addr);
+#endif
+
 	// Validate arguments
 	if (sock != NULL)
 	{
 		sock->IgnoreRecvErr = false;
 	}
-	if (sock == NULL || src_addr == NULL || src_port == NULL || data == NULL)
+	else
 	{
-		return false;
+		return 0;
 	}
+
+	if (src_addr == NULL || src_port == NULL || data == NULL || size == 0)
+	{
+		return 0;
+	}
+
 	if (sock->Type != SOCK_UDP || sock->socket == INVALID_SOCKET)
 	{
-		return false;
-	}
-	if (size == 0)
-	{
-		return false;
+		return 0;
 	}
 
-	s = sock->socket;
 
-	sz = sizeof(addr);
-	ret = recvfrom(s, data, size, 0, (struct sockaddr *)&addr, (int *)&sz);
+	ret = recvfrom(sock->socket, data, size, 0, (struct sockaddr *)&addr, &socklen);
 	if (ret > 0)
 	{
 		InAddrToIP6(src_addr, &addr.sin6_addr);
@@ -10840,14 +10726,10 @@ UINT RecvFrom6(SOCK *sock, IP *src_addr, UINT *src_port, void *data, UINT size)
 		}
 		Unlock(sock->lock);
 
-		// Debug("UDP RecvFrom: %u\n", ret);
-
 		return (UINT)ret;
 	}
 	else
 	{
-		sock->IgnoreRecvErr = false;
-
 #ifdef	OS_WIN32
 		if (WSAGetLastError() == WSAECONNRESET || WSAGetLastError() == WSAENETRESET || WSAGetLastError() == WSAEMSGSIZE || WSAGetLastError() == WSAENETUNREACH ||
 			WSAGetLastError() == WSAENOBUFS || WSAGetLastError() == WSAEHOSTUNREACH || WSAGetLastError() == WSAEUSERS || WSAGetLastError() == WSAEADDRNOTAVAIL || WSAGetLastError() == WSAEADDRNOTAVAIL)
@@ -10860,10 +10742,9 @@ UINT RecvFrom6(SOCK *sock, IP *src_addr, UINT *src_port, void *data, UINT size)
 		}
 		else
 		{
-			UINT e = WSAGetLastError();
-			//			Debug("RecvFrom Error: %u\n", e);
+			Debug("RecvFrom(): recvfrom() failed with error: %u\n", WSAGetLastError());
 		}
-#else	// OS_WIN32
+#else
 		if (errno == ECONNREFUSED || errno == ECONNRESET || errno == EMSGSIZE || errno == ENOBUFS || errno == ENOMEM || errno == EINTR)
 		{
 			sock->IgnoreRecvErr = true;
@@ -10872,7 +10753,11 @@ UINT RecvFrom6(SOCK *sock, IP *src_addr, UINT *src_port, void *data, UINT size)
 		{
 			return SOCK_LATER;
 		}
-#endif	// OS_WIN32
+		else
+		{
+			Debug("RecvFrom(): recvfrom() failed with error: %s\n", strerror(errno));
+		}
+#endif
 		return 0;
 	}
 }
@@ -11108,7 +10993,7 @@ SOCK *NewUDPEx2Rand(bool ipv6, IP *ip, void *rand_seed, UINT rand_seed_size, UIN
 		WriteBuf(buf, rand_seed, rand_seed_size);
 		WriteBufInt(buf, i);
 
-		HashSha1(hash, buf->Buf, buf->Size);
+		Sha1(hash, buf->Buf, buf->Size);
 
 		FreeBuf(buf);
 
@@ -11160,7 +11045,7 @@ SOCK *NewUDPEx2RandMachineAndExePath(bool ipv6, IP *ip, UINT num_retry, UCHAR ra
 	WriteBufChar(b, rand_port_id);
 	//WriteBufInt(b, GetHostIPAddressHash32());
 
-	HashSha1(hash, b->Buf, b->Size);
+	Sha1(hash, b->Buf, b->Size);
 
 	FreeBuf(b);
 
@@ -12327,7 +12212,7 @@ UINT SecureSend(SOCK *sock, void *data, UINT size)
 		if (sock->Connected == false)
 		{
 			Unlock(sock->ssl_lock);
-			Debug("%s %u SecureRecv() Disconnect\n", __FILE__, __LINE__);
+			Debug("%s %u SecureSend() Disconnect\n", __FILE__, __LINE__);
 			return 0;
 		}
 
@@ -12357,7 +12242,7 @@ UINT SecureSend(SOCK *sock, void *data, UINT size)
 	if (ret == 0)
 	{
 		// Disconnect
-		Debug("%s %u SecureRecv() Disconnect\n", __FILE__, __LINE__);
+		Debug("%s %u SecureSend() Disconnect\n", __FILE__, __LINE__);
 		Disconnect(sock);
 		return 0;
 	}
@@ -12372,7 +12257,7 @@ UINT SecureSend(SOCK *sock, void *data, UINT size)
 		}
 		Debug("%s %u e=%u\n", __FILE__, __LINE__, e);
 	}
-	//Debug("%s %u SecureRecv() Disconnect\n", __FILE__, __LINE__);
+	//Debug("%s %u SecureSend() Disconnect\n", __FILE__, __LINE__);
 	Disconnect(sock);
 	return 0;
 }
@@ -15081,7 +14966,7 @@ void GetMachineNameEx(char *name, UINT size, bool no_load_hosts)
 			{
 				if (GetMachineNameFromHosts(tmp2, sizeof(tmp2)))
 				{
-					StrCpy(name, sizeof(name), tmp2);
+					StrCpy(name, size, tmp2);
 				}
 			}
 		}
@@ -16532,8 +16417,6 @@ void InitNetwork()
 	Zero(&unix_dns_server, sizeof(unix_dns_server));
 	local_mac_list_lock = NewLock();
 
-	cipher_list_token = ParseToken(cipher_list, " ");
-
 	current_global_ip_lock = NewLock();
 	current_fqdn_lock = NewLock();
 	current_global_ip_set = false;
@@ -16566,7 +16449,67 @@ bool IsNetworkNameCacheEnabled()
 // Get the cipher algorithm list
 TOKEN_LIST *GetCipherList()
 {
-	return cipher_list_token;
+	UINT i;
+	SSL *ssl;
+	SSL_CTX *ctx;
+	const char *name;
+	STACK_OF(SSL_CIPHER) *sk;
+
+	TOKEN_LIST *ciphers = ZeroMalloc(sizeof(TOKEN_LIST));
+
+	ctx = NewSSLCtx(true);
+	if (ctx == NULL)
+	{
+		return ciphers;
+	}
+
+	SSL_CTX_set_ssl_version(ctx, SSLv23_server_method());
+
+#ifdef	SSL_OP_NO_SSLv3
+	SSL_CTX_set_options(ctx, SSL_OP_NO_SSLv3);
+#endif
+
+	ssl = SSL_new(ctx);
+	if (ssl == NULL)
+	{
+		FreeSSLCtx(ctx);
+		return ciphers;
+	}
+
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
+	sk = SSL_get1_supported_ciphers(ssl);
+#else
+	sk = SSL_get_ciphers(ssl);
+#endif
+
+	for (i = 0; i < sk_SSL_CIPHER_num(sk); i++)
+	{
+		const SSL_CIPHER *c = sk_SSL_CIPHER_value(sk, i);
+
+		name = SSL_CIPHER_get_name(c);
+		if (IsEmptyStr(name))
+		{
+			break;
+		}
+
+		ciphers->NumTokens++;
+
+		if (ciphers->Token != NULL)
+		{
+			ciphers->Token = ReAlloc(ciphers->Token, sizeof(char *) * ciphers->NumTokens);
+		}
+		else
+		{
+			ciphers->Token = Malloc(sizeof(char *));
+		}
+
+		ciphers->Token[i] = CopyStr(name);
+	}
+
+	sk_SSL_CIPHER_free(sk);
+	SSL_free(ssl);
+
+	return ciphers;
 }
 
 // Get the TCP connections counter
@@ -16953,9 +16896,6 @@ void FreeNetwork()
 
 	// Release of thread-related
 	FreeWaitThread();
-
-	FreeToken(cipher_list_token);
-	cipher_list_token = NULL;
 
 	Zero(&unix_dns_server, sizeof(unix_dns_server));
 
@@ -18092,7 +18032,7 @@ UINT64 GetHostIPAddressListHash()
 
 	WriteBufStr(buf, "test");
 
-	HashSha1(hash, buf->Buf, buf->Size);
+	Sha1(hash, buf->Buf, buf->Size);
 
 	FreeBuf(buf);
 
@@ -18711,16 +18651,9 @@ LABEL_RESTART:
 			// Create a thread to get a NAT-T IP address if necessary
 			if (u->GetNatTIpThread == NULL)
 			{
-				// Create a thread to get a NAT-T IP address if necessary
-				if (u->GetNatTIpThread == NULL)
-				{
-					char natt_hostname[MAX_SIZE];
-
-					RUDPGetRegisterHostNameByIP(natt_hostname, sizeof(natt_hostname), NULL);
-
-					u->GetNatTIpThread = NewQueryIpThread(natt_hostname, QUERYIPTHREAD_INTERVAL_LAST_OK, QUERYIPTHREAD_INTERVAL_LAST_NG);
-				}
-
+				char natt_hostname[MAX_SIZE];
+				RUDPGetRegisterHostNameByIP(natt_hostname, sizeof(natt_hostname), NULL);
+				u->GetNatTIpThread = NewQueryIpThread(natt_hostname, QUERYIPTHREAD_INTERVAL_LAST_OK, QUERYIPTHREAD_INTERVAL_LAST_NG);
 				GetQueryIpThreadResult(u->GetNatTIpThread, &nat_t_ip);
 			}
 		}
@@ -20565,101 +20498,53 @@ HTTP_HEADER *RecvHttpHeader(SOCK *s)
 	str = RecvLine(s, HTTP_HEADER_LINE_MAX_SIZE);
 	if (str == NULL)
 	{
-		goto LABEL_ERROR;
+		return NULL;
 	}
 
 	// Split into tokens
 	token = ParseToken(str, " ");
+
+	FreeSafe(PTR_TO_PTR(str));
+
 	if (token->NumTokens < 3)
 	{
-		goto LABEL_ERROR;
+		FreeToken(token);
+		return NULL;
 	}
-
-	Free(str);
-	str = NULL;
 
 	// Creating a header object
 	header = NewHttpHeader(token->Token[0], token->Token[1], token->Token[2]);
+	FreeToken(token);
 
 	if (StrCmpi(header->Version, "HTTP/0.9") == 0)
 	{
 		// The header ends with this line
-		FreeToken(token);
 		return header;
 	}
 
 	// Get the subsequent lines
 	while (true)
 	{
-		UINT pos;
-		HTTP_VALUE *v;
-		char *value_name, *value_data;
 		str = RecvLine(s, HTTP_HEADER_LINE_MAX_SIZE);
-		if (str == NULL)
-		{
-			goto LABEL_ERROR;
-		}
 		Trim(str);
-
-		if (StrLen(str) == 0)
+		if (IsEmptyStr(str))
 		{
 			// End of header
-			Free(str);
-			str = NULL;
+			FreeSafe(PTR_TO_PTR(str));
 			break;
 		}
 
-		// Get the position of the colon
-		pos = SearchStr(str, ":", 0);
-		if (pos == INFINITE)
+		if (AddHttpValueStr(header, str) == false)
 		{
-			// The colon does not exist
-			goto LABEL_ERROR;
-		}
-		if ((pos + 1) >= StrLen(str))
-		{
-			// There is no data
-			goto LABEL_ERROR;
+			FreeSafe(PTR_TO_PTR(str));
+			FreeHttpHeaderSafe(&header);
+			break;
 		}
 
-		// Divide into the name and the data
-		value_name = Malloc(pos + 1);
-		Copy(value_name, str, pos);
-		value_name[pos] = 0;
-		value_data = &str[pos + 1];
-
-		v = NewHttpValue(value_name, value_data);
-		if (v == NULL)
-		{
-			Free(value_name);
-			goto LABEL_ERROR;
-		}
-
-		Free(value_name);
-
-		AddHttpValue(header, v);
-		Free(str);
+		FreeSafe(PTR_TO_PTR(str));
 	}
-
-	FreeToken(token);
 
 	return header;
-
-LABEL_ERROR:
-	// Memory release
-	if (token)
-	{
-		FreeToken(token);
-	}
-	if (str)
-	{
-		Free(str);
-	}
-	if (header)
-	{
-		FreeHttpHeader(header);
-	}
-	return NULL;
 }
 
 // Receive a line
@@ -20773,6 +20658,57 @@ void AddHttpValue(HTTP_HEADER *header, HTTP_VALUE *value)
 	}
 }
 
+// Adds the HTTP value contained in the string to the HTTP header
+bool AddHttpValueStr(HTTP_HEADER* header, char *string)
+{
+	HTTP_VALUE *value = NULL;
+	UINT pos = 0;
+	char *value_name = NULL;
+	char *value_data = NULL;
+
+	// Validate arguments
+	if (header == NULL || IsEmptyStr(string))
+	{
+		return false;
+	}
+
+	// Sanitize string
+	EnSafeHttpHeaderValueStr(string, ' ');
+
+	// Get the position of the colon
+	pos = SearchStr(string, ":", 0);
+	if (pos == INFINITE)
+	{
+		// The colon does not exist
+		return false;
+	}
+
+	if ((pos + 1) >= StrLen(string))
+	{
+		// There is no data
+		return false;
+	}
+
+	// Divide into the name and the data
+	value_name = Malloc(pos + 1);
+	Copy(value_name, string, pos);
+	value_name[pos] = 0;
+	value_data = &string[pos + 1];
+
+	value = NewHttpValue(value_name, value_data);
+	if (value == NULL)
+	{
+		Free(value_name);
+		return false;
+	}
+
+	Free(value_name);
+
+	AddHttpValue(header, value);
+
+	return true;
+}
+
 // Create an HTTP header
 HTTP_HEADER *NewHttpHeader(char *method, char *target, char *version)
 {
@@ -20856,6 +20792,13 @@ void FreeHttpHeader(HTTP_HEADER *header)
 	Free(header);
 }
 
+// Release the HTTP header and set pointer's value to NULL
+void FreeHttpHeaderSafe(HTTP_HEADER **header)
+{
+	FreeHttpHeader(*header);
+	*header = NULL;
+}
+
 // Receive a PACK
 PACK *RecvPack(SOCK *s)
 {
@@ -20926,7 +20869,7 @@ PACK *RecvPackWithHash(SOCK *s)
 		return false;
 	}
 
-	HashSha1(hash1, data, sz);
+	Sha1(hash1, data, sz);
 	if (RecvAll(s, hash2, sizeof(hash2), s->SecureMode) == false)
 	{
 		Free(data);
@@ -20987,7 +20930,7 @@ bool SendPackWithHash(SOCK *s, PACK *p)
 
 	SendAdd(s, &sz, sizeof(UINT));
 	SendAdd(s, b->Buf, b->Size);
-	HashSha1(hash, b->Buf, b->Size);
+	Sha1(hash, b->Buf, b->Size);
 	SendAdd(s, hash, sizeof(hash));
 
 	FreeBuf(b);

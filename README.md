@@ -1,6 +1,6 @@
 # SoftEther VPN
 
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/softethervpn/softethervpn?branch=master&svg=true)](https://ci.appveyor.com/project/softethervpn/softethervpn) [![Travis CI build status](https://travis-ci.org/SoftEtherVPN/SoftEtherVPN.svg?branch=master)](https://travis-ci.org/SoftEtherVPN/SoftEtherVPN) [![Coverity Scan Build Status](https://scan.coverity.com/projects/16304/badge.svg)](https://scan.coverity.com/projects/softethervpn-softethervpn)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/softethervpn/softethervpn?branch=master&svg=true)](https://ci.appveyor.com/project/softethervpn/softethervpn) [![Travis CI build status](https://travis-ci.org/SoftEtherVPN/SoftEtherVPN.svg?branch=master)](https://travis-ci.org/SoftEtherVPN/SoftEtherVPN) [![gitlab-ci build status](https://gitlab.com/SoftEther/SoftEtherVPN/badges/master/build.svg)](https://gitlab.com/SoftEther/SoftEtherVPN/pipelines) [![Coverity Scan Build Status](https://scan.coverity.com/projects/16304/badge.svg)](https://scan.coverity.com/projects/softethervpn-softethervpn)
 
 - [SoftEther VPN](#softether-vpn)
 - [BOARD MEMBERS OF THIS REPOSITORY](#board-members-of-this-repository)
@@ -27,10 +27,10 @@ which the non-developer user can stable use.
 Source code packages (.zip and .tar.gz) and binary files of Stable Edition are also available:  
 http://www.softether-download.com/
 
-We accept your patches by the acceptance policy:
-http://www.softether.org/5-download/src/9.patch
+Copyright (c) all contributors on SoftEther VPN project in GitHub.
+Copyright (c) Daiyuu Nobori, SoftEther Project at University of Tsukuba, and SoftEther Corporation.
 
-Copyright (c) SoftEther Project at University of Tsukuba, Japan.
+---
 
 The development of SoftEther VPN was supported by the MITOH Project,
 a research and development project by Japanese Government,
@@ -38,10 +38,23 @@ subsidized by Ministry of Economy, Trade and Industry of Japan,
 administrated by Information Promotion Agency.
 https://www.ipa.go.jp/english/humandev/
 
+---
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License version 2
-as published by the Free Software Foundation.
+![https://icons8.com](resources/icons8.png "Icons8")
+
+[Icons8](https://icons8.com) kindly supported the project by gifting a license which allows to edit and redistribute their icons.
+
+Please note that you are not allowed to redistribute those icons outside of this repository.
+
+The developers of SoftEther VPN love Icons8's work and kindly ask the users to support them as much as possible.
+
+---
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
 
 SoftEther VPN ("SoftEther" means "Software Ethernet") is one of the
 world's most powerful and easy-to-use multi-protocol VPN software.
@@ -121,7 +134,11 @@ https://github.com/chipitsine
 
 ## For Ubuntu
 
-[Launchpad PPA](https://launchpad.net/~paskal-07/+archive/ubuntu/softethervpn/+packages) maintained by [Dmitry Verkhoturov](https://github.com/paskal)
+Launchpad PPA maintained by [Dmitry Verkhoturov](https://github.com/paskal):
+
+[Daily builds](https://code.launchpad.net/~paskal-07/+archive/ubuntu/softethervpn) (latest released tag)
+
+[Nightly builds](https://code.launchpad.net/~paskal-07/+archive/ubuntu/softethervpn-nightly)
 
 ## From binary installers:
 
@@ -168,8 +185,6 @@ We hope that you can reach one of the above URLs at least!
 
 Your contribution to SoftEther VPN Project is much appreciated.
 Please send patches to us through GitHub.
-Read the SoftEther VPN Patch Acceptance Policy in advance:
-http://www.softether.org/5-download/src/9.patch
 
 
 # DEAR SECURITY EXPERTS

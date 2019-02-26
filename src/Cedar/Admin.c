@@ -1,113 +1,5 @@
 // SoftEther VPN Source Code - Developer Edition Master Branch
 // Cedar Communication Module
-// 
-// SoftEther VPN Server, Client and Bridge are free software under GPLv2.
-// 
-// Copyright (c) Daiyuu Nobori.
-// Copyright (c) SoftEther VPN Project, University of Tsukuba, Japan.
-// Copyright (c) SoftEther Corporation.
-// 
-// All Rights Reserved.
-// 
-// http://www.softether.org/
-// 
-// Author: Daiyuu Nobori, Ph.D.
-// Contributors:
-// - ELIN (https://github.com/el1n)
-// Comments: Tetsuo Sugiyama, Ph.D.
-// 
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 2 as published by the Free Software Foundation.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License version 2
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-// CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-// TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-// SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
-// THE LICENSE AGREEMENT IS ATTACHED ON THE SOURCE-CODE PACKAGE
-// AS "LICENSE.TXT" FILE. READ THE TEXT FILE IN ADVANCE TO USE THE SOFTWARE.
-// 
-// 
-// THIS SOFTWARE IS DEVELOPED IN JAPAN, AND DISTRIBUTED FROM JAPAN,
-// UNDER JAPANESE LAWS. YOU MUST AGREE IN ADVANCE TO USE, COPY, MODIFY,
-// MERGE, PUBLISH, DISTRIBUTE, SUBLICENSE, AND/OR SELL COPIES OF THIS
-// SOFTWARE, THAT ANY JURIDICAL DISPUTES WHICH ARE CONCERNED TO THIS
-// SOFTWARE OR ITS CONTENTS, AGAINST US (SOFTETHER PROJECT, SOFTETHER
-// CORPORATION, DAIYUU NOBORI OR OTHER SUPPLIERS), OR ANY JURIDICAL
-// DISPUTES AGAINST US WHICH ARE CAUSED BY ANY KIND OF USING, COPYING,
-// MODIFYING, MERGING, PUBLISHING, DISTRIBUTING, SUBLICENSING, AND/OR
-// SELLING COPIES OF THIS SOFTWARE SHALL BE REGARDED AS BE CONSTRUED AND
-// CONTROLLED BY JAPANESE LAWS, AND YOU MUST FURTHER CONSENT TO
-// EXCLUSIVE JURISDICTION AND VENUE IN THE COURTS SITTING IN TOKYO,
-// JAPAN. YOU MUST WAIVE ALL DEFENSES OF LACK OF PERSONAL JURISDICTION
-// AND FORUM NON CONVENIENS. PROCESS MAY BE SERVED ON EITHER PARTY IN
-// THE MANNER AUTHORIZED BY APPLICABLE LAW OR COURT RULE.
-// 
-// USE ONLY IN JAPAN. DO NOT USE THIS SOFTWARE IN ANOTHER COUNTRY UNLESS
-// YOU HAVE A CONFIRMATION THAT THIS SOFTWARE DOES NOT VIOLATE ANY
-// CRIMINAL LAWS OR CIVIL RIGHTS IN THAT PARTICULAR COUNTRY. USING THIS
-// SOFTWARE IN OTHER COUNTRIES IS COMPLETELY AT YOUR OWN RISK. THE
-// SOFTETHER VPN PROJECT HAS DEVELOPED AND DISTRIBUTED THIS SOFTWARE TO
-// COMPLY ONLY WITH THE JAPANESE LAWS AND EXISTING CIVIL RIGHTS INCLUDING
-// PATENTS WHICH ARE SUBJECTS APPLY IN JAPAN. OTHER COUNTRIES' LAWS OR
-// CIVIL RIGHTS ARE NONE OF OUR CONCERNS NOR RESPONSIBILITIES. WE HAVE
-// NEVER INVESTIGATED ANY CRIMINAL REGULATIONS, CIVIL LAWS OR
-// INTELLECTUAL PROPERTY RIGHTS INCLUDING PATENTS IN ANY OF OTHER 200+
-// COUNTRIES AND TERRITORIES. BY NATURE, THERE ARE 200+ REGIONS IN THE
-// WORLD, WITH DIFFERENT LAWS. IT IS IMPOSSIBLE TO VERIFY EVERY
-// COUNTRIES' LAWS, REGULATIONS AND CIVIL RIGHTS TO MAKE THE SOFTWARE
-// COMPLY WITH ALL COUNTRIES' LAWS BY THE PROJECT. EVEN IF YOU WILL BE
-// SUED BY A PRIVATE ENTITY OR BE DAMAGED BY A PUBLIC SERVANT IN YOUR
-// COUNTRY, THE DEVELOPERS OF THIS SOFTWARE WILL NEVER BE LIABLE TO
-// RECOVER OR COMPENSATE SUCH DAMAGES, CRIMINAL OR CIVIL
-// RESPONSIBILITIES. NOTE THAT THIS LINE IS NOT LICENSE RESTRICTION BUT
-// JUST A STATEMENT FOR WARNING AND DISCLAIMER.
-// 
-// 
-// SOURCE CODE CONTRIBUTION
-// ------------------------
-// 
-// Your contribution to SoftEther VPN Project is much appreciated.
-// Please send patches to us through GitHub.
-// Read the SoftEther VPN Patch Acceptance Policy in advance:
-// http://www.softether.org/5-download/src/9.patch
-// 
-// 
-// DEAR SECURITY EXPERTS
-// ---------------------
-// 
-// If you find a bug or a security vulnerability please kindly inform us
-// about the problem immediately so that we can fix the security problem
-// to protect a lot of users around the world as soon as possible.
-// 
-// Our e-mail address for security reports is:
-// softether-vpn-security [at] softether.org
-// 
-// Please note that the above e-mail address is not a technical support
-// inquiry address. If you need technical assistance, please visit
-// http://www.softether.org/ and ask your question on the users forum.
-// 
-// Thank you for your cooperation.
-// 
-// 
-// NO MEMORY OR RESOURCE LEAKS
-// ---------------------------
-// 
-// The memory-leaks and resource-leaks verification under the stress
-// test has been passed before release this source code.
 
 
 // Admin.c
@@ -456,6 +348,7 @@ PACK *AdminDispatch(RPC *rpc, char *name, PACK *p)
 	DECLARE_RPC("GetFarmConnectionStatus", RPC_FARM_CONNECTION_STATUS, StGetFarmConnectionStatus, InRpcFarmConnectionStatus, OutRpcFarmConnectionStatus)
 	DECLARE_RPC_EX("SetServerCert", RPC_KEY_PAIR, StSetServerCert, InRpcKeyPair, OutRpcKeyPair, FreeRpcKeyPair)
 	DECLARE_RPC_EX("GetServerCert", RPC_KEY_PAIR, StGetServerCert, InRpcKeyPair, OutRpcKeyPair, FreeRpcKeyPair)
+	DECLARE_RPC_EX("GetServerCipherList", RPC_STR, StGetServerCipherList, InRpcStr, OutRpcStr, FreeRpcStr)
 	DECLARE_RPC_EX("GetServerCipher", RPC_STR, StGetServerCipher, InRpcStr, OutRpcStr, FreeRpcStr)
 	DECLARE_RPC_EX("SetServerCipher", RPC_STR, StSetServerCipher, InRpcStr, OutRpcStr, FreeRpcStr)
 	DECLARE_RPC("CreateHub", RPC_CREATE_HUB, StCreateHub, InRpcCreateHub, OutRpcCreateHub)
@@ -635,6 +528,7 @@ DECLARE_SC_EX("EnumFarmMember", RPC_ENUM_FARM, ScEnumFarmMember, InRpcEnumFarm, 
 DECLARE_SC("GetFarmConnectionStatus", RPC_FARM_CONNECTION_STATUS, ScGetFarmConnectionStatus, InRpcFarmConnectionStatus, OutRpcFarmConnectionStatus)
 DECLARE_SC_EX("SetServerCert", RPC_KEY_PAIR, ScSetServerCert, InRpcKeyPair, OutRpcKeyPair, FreeRpcKeyPair)
 DECLARE_SC_EX("GetServerCert", RPC_KEY_PAIR, ScGetServerCert, InRpcKeyPair, OutRpcKeyPair, FreeRpcKeyPair)
+DECLARE_SC_EX("GetServerCipherList", RPC_STR, ScGetServerCipherList, InRpcStr, OutRpcStr, FreeRpcStr)
 DECLARE_SC_EX("GetServerCipher", RPC_STR, ScGetServerCipher, InRpcStr, OutRpcStr, FreeRpcStr)
 DECLARE_SC_EX("SetServerCipher", RPC_STR, ScSetServerCipher, InRpcStr, OutRpcStr, FreeRpcStr)
 DECLARE_SC("CreateHub", RPC_CREATE_HUB, ScCreateHub, InRpcCreateHub, OutRpcCreateHub)
@@ -5580,19 +5474,16 @@ UINT StAddAccess(ADMIN *a, RPC_ADD_ACCESS *t)
 
 	if (no_include)
 	{
-		if (no_include)
+		if (StartWith(t->Access.SrcUsername, ACCESS_LIST_INCLUDED_PREFIX) ||
+			StartWith(t->Access.SrcUsername, ACCESS_LIST_EXCLUDED_PREFIX))
 		{
-			if (StartWith(t->Access.SrcUsername, ACCESS_LIST_INCLUDED_PREFIX) ||
-				StartWith(t->Access.SrcUsername, ACCESS_LIST_EXCLUDED_PREFIX))
-			{
-				ClearStr(t->Access.SrcUsername, sizeof(t->Access.SrcUsername));
-			}
+			ClearStr(t->Access.SrcUsername, sizeof(t->Access.SrcUsername));
+		}
 
-			if (StartWith(t->Access.DestUsername, ACCESS_LIST_INCLUDED_PREFIX) ||
-				StartWith(t->Access.DestUsername, ACCESS_LIST_EXCLUDED_PREFIX))
-			{
-				ClearStr(t->Access.DestUsername, sizeof(t->Access.DestUsername));
-			}
+		if (StartWith(t->Access.DestUsername, ACCESS_LIST_INCLUDED_PREFIX) ||
+			StartWith(t->Access.DestUsername, ACCESS_LIST_EXCLUDED_PREFIX))
+		{
+			ClearStr(t->Access.DestUsername, sizeof(t->Access.DestUsername));
 		}
 	}
 
@@ -8018,7 +7909,7 @@ UINT StSetHub(ADMIN *a, RPC_CREATE_HUB *t)
 	{
 		UCHAR hash1[SHA1_SIZE], hash2[SHA1_SIZE];
 		HashPassword(hash1, ADMINISTRATOR_USERNAME, "");
-		Hash(hash2, "", 0, true);
+		Sha0(hash2, "", 0);
 
 		if (Cmp(t->HashedPassword, hash2, SHA1_SIZE) == 0 || Cmp(t->SecurePassword, hash1, SHA1_SIZE) == 0)
 		{
@@ -8242,6 +8133,43 @@ UINT StGetServerCipher(ADMIN *a, RPC_STR *t)
 	Lock(c->lock);
 	{
 		t->String = CopyStr(c->CipherList);
+	}
+	Unlock(c->lock);
+
+	return ERR_NO_ERROR;
+}
+
+// Get list of available ciphers for SSL
+UINT StGetServerCipherList(ADMIN *a, RPC_STR *t)
+{
+	SERVER *s = a->Server;
+	CEDAR *c = s->Cedar;
+
+	FreeRpcStr(t);
+	Zero(t, sizeof(RPC_STR));
+
+	Lock(c->lock);
+	{
+		UINT i;
+		TOKEN_LIST *ciphers = GetCipherList();
+		if (ciphers->NumTokens > 0)
+		{
+			UINT size = StrSize(ciphers->Token[0]);
+			t->String = Malloc(size);
+			StrCpy(t->String, size, ciphers->Token[0]);
+			i = 1;
+
+			for (; i < ciphers->NumTokens; i++)
+			{
+				// We use StrSize() because we need the extra space for ';'
+				size += StrSize(ciphers->Token[i]);
+				t->String = ReAlloc(t->String, size);
+				StrCat(t->String, size, ";");
+				StrCat(t->String, size, ciphers->Token[i]);
+			}
+		}
+
+		FreeToken(ciphers);
 	}
 	Unlock(c->lock);
 
@@ -8922,6 +8850,8 @@ void InOpenVpnSstpConfig(OPENVPN_SSTP_CONFIG *t, PACK *p)
 	t->EnableOpenVPN = PackGetBool(p, "EnableOpenVPN");
 	t->EnableSSTP = PackGetBool(p, "EnableSSTP");
 	PackGetStr(p, "OpenVPNPortList", t->OpenVPNPortList, sizeof(t->OpenVPNPortList));
+	t->OpenVPNObfuscation= PackGetBool(p, "OpenVPNObfuscation");
+	PackGetStr(p, "OpenVPNObfuscationMask", t->OpenVPNObfuscationMask, sizeof(t->OpenVPNObfuscationMask));
 }
 void OutOpenVpnSstpConfig(PACK *p, OPENVPN_SSTP_CONFIG *t)
 {
@@ -8934,6 +8864,8 @@ void OutOpenVpnSstpConfig(PACK *p, OPENVPN_SSTP_CONFIG *t)
 	PackAddBool(p, "EnableOpenVPN", t->EnableOpenVPN);
 	PackAddBool(p, "EnableSSTP", t->EnableSSTP);
 	PackAddStr(p, "OpenVPNPortList", t->OpenVPNPortList);
+	PackAddBool(p, "OpenVPNObfuscation", t->OpenVPNObfuscation);
+	PackAddStr(p, "OpenVPNObfuscationMask", t->OpenVPNObfuscationMask);
 }
 
 // DDNS_CLIENT_STATUS
@@ -8987,6 +8919,7 @@ void InRpcInternetSetting(INTERNET_SETTING *t, PACK *p)
 	t->ProxyPort = PackGetInt(p, "ProxyPort");
 	PackGetStr(p, "ProxyUsername", t->ProxyUsername, sizeof(t->ProxyUsername));
 	PackGetStr(p, "ProxyPassword", t->ProxyPassword, sizeof(t->ProxyPassword));
+	PackGetStr(p, "CustomHttpHeader", t->CustomHttpHeader, sizeof(t->CustomHttpHeader));
 }
 void OutRpcInternetSetting(PACK *p, INTERNET_SETTING *t)
 {
@@ -9001,6 +8934,7 @@ void OutRpcInternetSetting(PACK *p, INTERNET_SETTING *t)
 	PackAddInt(p, "ProxyPort", t->ProxyPort);
 	PackAddStr(p, "ProxyUsername", t->ProxyUsername);
 	PackAddStr(p, "ProxyPassword", t->ProxyPassword);
+	PackAddStr(p, "CustomHttpHeader", t->CustomHttpHeader);
 }
 
 // RPC_AZURE_STATUS
@@ -13602,7 +13536,7 @@ void HashAdminPassword(void *hash, char *password)
 		return;
 	}
 
-	Hash(hash, password, StrLen(password), true);
+	Sha0(hash, password, StrLen(password));
 }
 
 // Disconnect admin connection
@@ -13823,7 +13757,7 @@ bool SiIsEmptyPassword(void *hash_password)
 		return false;
 	}
 
-	Hash(hash, "", 0, true);
+	Sha0(hash, "", 0);
 
 	if (Cmp(hash_password, hash, SHA1_SIZE) == 0)
 	{
